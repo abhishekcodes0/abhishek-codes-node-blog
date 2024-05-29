@@ -1,4 +1,17 @@
+import dotenv from "dotenv";
 import express from "express";
+import mongoose from "mongoose";
+
+dotenv.config();
+
+const mongoUrl = process.env.MONGODB_URL;
+
+mongoose
+  .connect(mongoUrl)
+  .then(() => {
+    console.log("Database is connected");
+  })
+  .catch((error) => console.log(error));
 
 const app = express();
 const PORT = 5000;
