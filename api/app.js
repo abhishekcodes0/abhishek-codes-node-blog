@@ -33,6 +33,7 @@ try {
 }
 
 export const secret = response.SecretString;
+console.log("===========secret", secret);
 
 const mongoUrl = secret.MONGODB_URL || process.env.MONGODB_URL;
 
