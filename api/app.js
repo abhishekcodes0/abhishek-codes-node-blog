@@ -34,6 +34,7 @@ try {
 
 export const secret = response.SecretString;
 console.log("===========secret", secret);
+console.log("===========secret", secret.MONGODB_URL);
 
 const mongoUrl = secret.MONGODB_URL || process.env.MONGODB_URL;
 
