@@ -32,7 +32,7 @@ try {
   throw error;
 }
 
-export const secret = response.SecretString;
+export const secret = JSON.parse(response.SecretString);
 console.log("===========secret", secret);
 console.log("===========secret", secret.MONGODB_URL);
 
