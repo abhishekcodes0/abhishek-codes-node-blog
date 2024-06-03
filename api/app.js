@@ -32,10 +32,9 @@ try {
   throw error;
 }
 
-const secret = response.SecretString;
-console.log("secret", secret);
+export const secret = response.SecretString;
 
-const mongoUrl = process.env.MONGODB_URL;
+const mongoUrl = secret.MONGODB_URL || process.env.MONGODB_URL;
 
 mongoose
   .connect(mongoUrl)
