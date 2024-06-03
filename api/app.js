@@ -1,11 +1,39 @@
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
+import {
+  SecretsManagerClient,
+  GetSecretValueCommand,
+} from "@aws-sdk/client-secrets-manager";
 
 import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 
 dotenv.config();
+
+const secret_name = "node-blog-keys";
+
+const client = new SecretsManagerClient({
+  region: "ap-south-1",
+});
+
+let response;
+
+try {
+  response = await client.send(
+    new GetSecretValueCommand({
+      SecretId: secret_name,
+      VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
+    })
+  );
+} catch (error) {
+  // For a list of exceptions thrown, see
+  // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+  throw error;
+}
+
+const secret = response.SecretString;
+console.log("secret", secret);
 
 const mongoUrl = process.env.MONGODB_URL;
 
@@ -17,7 +45,7 @@ mongoose
   .catch((error) => console.log(error));
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.listen(PORT, () => {
