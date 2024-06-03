@@ -36,7 +36,7 @@ export const secret = JSON.parse(response.SecretString);
 console.log("===========secret", secret);
 console.log("===========secret", secret.MONGODB_URL);
 
-const mongoUrl = secret.MONGODB_URL || process.env.MONGODB_URL;
+const mongoUrl = secret.MONGODB_URL;
 
 mongoose
   .connect(mongoUrl)
@@ -46,7 +46,7 @@ mongoose
   .catch((error) => console.log(error));
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 app.use(express.json());
 app.listen(PORT, () => {

@@ -5,7 +5,7 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon api/app.js",
+    "dev": "nodemon api/app-local.js",
     "start": "node api/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.588.0",
+    "@aws-sdk/client-secrets-manager": "3.588.0",
     "bcryptjs": "2.4.3",
     "dotenv": "16.4.5",
     "express": "4.19.2",
