@@ -5,8 +5,8 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon api/app-local.js",
-    "start": "node api/app.js",
+    "dev": "cross-env NODE_ENV=development dotenv -e .env.development nodemon api/app.js",
+    "start": "cross-env NODE_ENV=production node api/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,7 +15,9 @@
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "3.588.0",
     "bcryptjs": "2.4.3",
-    "dotenv": "16.4.5",
+    "cookie-parser": "^1.4.6",
+    "cross-env": "7.0.3",
+    "dotenv-cli": "7.4.2",
     "express": "4.19.2",
     "jsonwebtoken": "9.0.2",
     "mongoose": "8.4.0"

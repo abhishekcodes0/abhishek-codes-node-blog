@@ -5,38 +5,44 @@ import {
   SecretsManagerClient,
   GetSecretValueCommand,
 } from "@aws-sdk/client-secrets-manager";
+import cookieParser from "cookie-parser";
 
 import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 
 dotenv.config();
 
-const secret_name = "node-blog-keys";
+export let secret;
 
-const client = new SecretsManagerClient({
-  region: "ap-south-1",
-});
+if (process.env.NODE_ENV == "production") {
+  const secret_name = "node-blog-keys";
 
-let response;
+  const client = new SecretsManagerClient({
+    region: "ap-south-1",
+  });
 
-try {
-  response = await client.send(
-    new GetSecretValueCommand({
-      SecretId: secret_name,
-      VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
-    })
-  );
-} catch (error) {
-  // For a list of exceptions thrown, see
-  // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-  throw error;
+  let response;
+
+  try {
+    response = await client.send(
+      new GetSecretValueCommand({
+        SecretId: secret_name,
+        VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
+      })
+    );
+  } catch (error) {
+    // For a list of exceptions thrown, see
+    // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+    throw error;
+  }
+
+  secret = JSON.parse(response.SecretString);
 }
 
-export const secret = JSON.parse(response.SecretString);
-console.log("===========secret", secret);
-console.log("===========secret", secret.MONGODB_URL);
-
-const mongoUrl = secret.MONGODB_URL;
+const mongoUrl =
+  process.env.NODE_ENV == "production"
+    ? secret?.MONGODB_URL
+    : process.env.MONGODB_URL;
 
 mongoose
   .connect(mongoUrl)
@@ -49,6 +55,8 @@ const app = express();
 const PORT = 5000;
 
 app.use(express.json());
+app.use(cookieParser());
+
 app.listen(PORT, () => {
   console.log("Server is running on port", PORT);
 });

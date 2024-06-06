@@ -50,8 +50,11 @@ export const signin = async (req, res, next) => {
     const token = jwt.sign(
       {
         id: validUser._id,
+        isAdmin: validUser.isAdmin,
       },
-      secret.JWT_SECRET || process.env.JWT_SECRET
+      process.env.NODE_ENV == "production"
+        ? secret?.JWT_SECRET
+        : process.env.JWT_SECRET
     );
     const { password: pass, ...rest } = validUser._doc;
 
