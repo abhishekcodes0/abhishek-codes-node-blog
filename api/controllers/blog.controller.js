@@ -26,7 +26,57 @@ export const getBlogs = async (req, res, next) => {
   try {
     const allBlogs = await Blog.find({});
     console.log("allBlogs", allBlogs);
-    res.status(201).json(allBlogs);
+    const dateDescBlogs = allBlogs.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    res.status(201).json(dateDescBlogs);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPublishedBlogs = async (req, res, next) => {
+  try {
+    const allBlogs = await Blog.find({ status: "published" });
+    const dateDescBlogs = allBlogs.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    res.status(201).json(dateDescBlogs);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getSingleBlog = async (req, res, next) => {
+  try {
+    const singleBlog = await Blog.findOne({ slug: req.params.slug });
+    res.status(201).json(singleBlog);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateBlog = async (req, res, next) => {
+  try {
+    const updatedBlog = await Blog.findOneAndUpdate(
+      { slug: req.params.slug },
+      {
+        $set: {
+          title: req.body.title,
+          status: req.body.status,
+          summary: req.body.summary,
+          slug: req.body.slug,
+          category: req.body.category,
+          isFeatured: req.body.isFeatured,
+          thumbnail: req.body.thumbnail,
+          content: req.body.content,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json(updatedBlog._doc);
   } catch (error) {
     next(error);
   }
