@@ -30,7 +30,6 @@ export const createBlog = async (req, res, next) => {
 export const getBlogs = async (req, res, next) => {
   try {
     const allBlogs = await Blog.find({});
-    console.log("allBlogs", allBlogs);
     const dateDescBlogs = allBlogs.sort((a, b) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
