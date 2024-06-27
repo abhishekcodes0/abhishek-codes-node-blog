@@ -16,7 +16,7 @@ import mailRoutes from "./routes/mail.route.js";
 
 dotenv.config();
 
-export let secret;
+export let secret = {};
 
 if (process.env.NODE_ENV == "production") {
   const secret_name = "node-blog-keys";
