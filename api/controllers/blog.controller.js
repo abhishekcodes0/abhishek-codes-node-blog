@@ -5,7 +5,25 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 } from "uuid";
 import path from "path";
 import { secret } from "../app.js";
-import { s3 } from "../aws-config.js";
+
+import { S3Client } from "@aws-sdk/client-s3";
+
+const s3 = new S3Client({
+  region:
+    process.env.NODE_ENV == "production"
+      ? secret?.AWS_REGION
+      : process.env.AWS_REGION,
+  credentials: {
+    accessKeyId:
+      process.env.NODE_ENV == "production"
+        ? secret?.AWS_ACCESS_KEY_ID
+        : process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey:
+      process.env.NODE_ENV == "production"
+        ? secret?.AWS_SECRET_ACCESS_KEY
+        : process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 export const createBlog = async (req, res, next) => {
   if (!req.user.isAdmin) {
