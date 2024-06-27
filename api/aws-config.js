@@ -1,5 +1,5 @@
 import { S3Client } from "@aws-sdk/client-s3";
-import { secret } from "./app";
+import { secret } from "./app.js";
 
 export const s3 = new S3Client(
   process.env.NODE_ENV == "production"
