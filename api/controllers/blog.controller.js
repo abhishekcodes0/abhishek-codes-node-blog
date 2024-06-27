@@ -96,6 +96,7 @@ export const uploadImage = async (req, res, next) => {
     Body: file.buffer,
     ContentType: file.mimetype,
     ACL: "public-read", // Make the file publicly readable
+    Region: "ap-south-1",
   };
 
   try {
