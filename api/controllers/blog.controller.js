@@ -5,6 +5,7 @@ import { s3 } from "../aws-config.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 } from "uuid";
 import path from "path";
+import { secret } from "../app.js";
 
 export const createBlog = async (req, res, next) => {
   if (!req.user.isAdmin) {
@@ -91,17 +92,23 @@ export const uploadImage = async (req, res, next) => {
   const fileName = `${v4()}${path.extname(file.originalname)}`;
 
   const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
+    Bucket:
+      process.env.NODE_ENV == "production"
+        ? secret?.AWS_BUCKET_NAME
+        : process.env.AWS_BUCKET_NAME,
     Key: fileName,
     Body: file.buffer,
     ContentType: file.mimetype,
     ACL: "public-read", // Make the file publicly readable
-    Region: "ap-south-1",
   };
 
   try {
     await s3.send(new PutObjectCommand(params));
-    const url = `https://${params.Bucket}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`;
+    const url = `https://${params.Bucket}.s3.${
+      process.env.NODE_ENV == "production"
+        ? secret?.AWS_REGION
+        : process.env.AWS_REGION
+    }.amazonaws.com/${params.Key}`;
     res.status(200).send({ url });
   } catch (error) {
     next(error);
