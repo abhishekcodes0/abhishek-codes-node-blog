@@ -1,11 +1,11 @@
 import Blog from "../models/blog.model.js";
 import { errorHandler } from "../utils/error.js";
 
-import { s3 } from "../aws-config.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 } from "uuid";
 import path from "path";
 import { secret } from "../app.js";
+import { s3 } from "../aws-config.js";
 
 export const createBlog = async (req, res, next) => {
   if (!req.user.isAdmin) {
